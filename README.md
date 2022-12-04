@@ -2,8 +2,10 @@
 
 # [👉👉 Live Demo ](https://filte-react.netlify.app)
 
-![img](./src/assets/filtera.png)
-![img](./src/assets/filterb.png)
+![img](https://i.ibb.co/k9j287c/filtera.png)
+![img](https://i.ibb.co/6skm1zY/filterb.png)
+
+
 
 ## Four level filter inclueds
 
