@@ -4,7 +4,9 @@ import bedIcon from "../assets/bed.png";
 
 function Card({ data }) {
   const date = data.date;
-  const fullDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  const fullDate = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}`;
 
   return (
     <div className="max-w-xs bg-white border border-gray-200 rounded-lg shadow-md ">
