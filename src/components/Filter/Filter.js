@@ -1,8 +1,8 @@
-import React from "react";
-import { useState } from "react";
 import Dropdown from "./Dropdown.js";
+import React, { useState } from "react";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import DatePicker from "react-modern-calendar-datepicker";
+import { Calendar } from "react-modern-calendar-datepicker";
+
 function Filter({ dataArr }) {
   const [dropdown, setDropdown] = useState(null);
   const [city, setCity] = useState("City");
@@ -10,6 +10,7 @@ function Filter({ dataArr }) {
   const [price, setPrice] = useState({ from: "From", to: "To" });
   const [moveIn, setMoveIn] = useState("");
   const [propertyType, setPropertyType] = useState("All");
+  const [selectedDayRange, setSelectedDayRange] = useState(null);
   const states = ["State", ...new Set(dataArr.map((data) => data.state))];
   const cities = ["City", ...new Set(dataArr.map((data) => data.city))];
   const propertyTypes = [
@@ -32,9 +33,11 @@ function Filter({ dataArr }) {
         </div>
       </div>
       {/* locaion end */}
+      {/* */}
+
       <div>
         <p className="text-gray-500 font-semibold mb-2 text-sm">When</p>
-        <div>
+        <div className="relative">
           <span className="flex gap-2 items-center cursor-pointer">
             <p className="   text-black text-base  font-bold ">
               {moveIn ? moveIn : "Select Move-in Date"}{" "}
@@ -54,8 +57,17 @@ function Filter({ dataArr }) {
               </svg>
             </span>
           </span>
+          <div className="absolute mt-2">
+            <Calendar
+              value={selectedDayRange}
+              onChange={setSelectedDayRange}
+              shouldHighlightWeekends
+            />
+          </div>
         </div>
       </div>
+      {/* */}
+
       {/* price */}
       <div>
         <p className="text-gray-500 font-semibold mb-2 text-sm">Price</p>
@@ -76,7 +88,7 @@ function Filter({ dataArr }) {
                 className="py-1 text-sm text-gray-700 "
                 aria-labelledby="dropdownDefault"
               >
-                <li className="flex">
+                <li className="px-1">
                   <input
                     type="number"
                     name="from"
@@ -85,6 +97,8 @@ function Filter({ dataArr }) {
                     placeholder="from"
                     required
                   />
+                </li>
+                <li className="px-1">
                   <input
                     type="number"
                     name="to"
