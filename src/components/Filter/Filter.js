@@ -2,45 +2,85 @@ import Dropdown from "./Dropdown.js";
 import React, { useState } from "react";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
+import data from "../../Data/data.js";
 
-function Filter({ dataArr }) {
+function Filter({ dataArr, setFilter }) {
   const [dropdown, setDropdown] = useState(null);
   const [city, setCity] = useState("City");
   const [state, setState] = useState("State");
-  const [price, setPrice] = useState({ from: "From", to: "To" });
-  const [moveIn, setMoveIn] = useState("");
+  const [price, setPrice] = useState("price-Range");
   const [propertyType, setPropertyType] = useState("All");
-  const [selectedDayRange, setSelectedDayRange] = useState(null);
+  const [date, setDate] = useState({ from: null, to: null });
+
   const states = ["State", ...new Set(dataArr.map((data) => data.state))];
-  const cities = ["City", ...new Set(dataArr.map((data) => data.city))];
+  const cities =
+    state === "satae"
+      ? ["City"]
+      : [
+          "City",
+          ...new Set(
+            dataArr.filter((e) => e.state === state).map((e) => e.city)
+          ),
+        ];
+
+  const priceRange = ["price-Range", 10000, 20000, 30000, 40000, 500000];
   const propertyTypes = [
-    "all",
+    "All",
     ...new Set(dataArr.map((data) => data.propertyType)),
   ];
 
+  function submit(e) {
+    e.preventDefault();
+    setFilter({
+      state,
+      city,
+      date: {
+        from:
+          date.from == null
+            ? null
+            : new Date(`${date.from.year}-${date.from.month}-${date.from.day}`),
+        to:
+          date.to == null
+            ? null
+            : new Date(`${date.to.year}-${date.to.month}-${date.to.day}`),
+      },
+      price,
+      propertyType,
+    });
+  }
+
   return (
-    <div className="flex md:w-[70rem]   bg-white  shadow-md items-center justify-between px-4  h-20 rounded-md ">
+    <form
+      className="flex md:w-[70rem] 
+    bg-white  shadow-md items-center justify-between px-4  h-20 rounded-md "
+      onSubmit={(e) => submit(e)}
+    >
       {/* location */}
       <div className="w-48">
         <p className="text-gray-500 font-semibold mb-2  text-sm">Location</p>
         <div className="flex gap-4">
           {/* state */}
-          <Dropdown data={states} />
+          <Dropdown data={states} setValue={setState} value={state} />
           {/* state  end */}
           {/* city */}
-          <Dropdown data={cities} />
+          <Dropdown data={cities} value={city} setValue={setCity} />
           {/* city  end*/}
         </div>
       </div>
       {/* locaion end */}
-      {/* */}
+      {/* date */}
 
       <div>
         <p className="text-gray-500 font-semibold mb-2 text-sm">When</p>
         <div className="relative">
-          <span className="flex gap-2 items-center cursor-pointer">
+          <span
+            className="flex gap-2 items-center cursor-pointer"
+            onClick={() => setDropdown(dropdown === "WHEN" ? null : "WHEN")}
+          >
             <p className="   text-black text-base  font-bold ">
-              {moveIn ? moveIn : "Select Move-in Date"}{" "}
+              {date.from != null && date.to != null
+                ? ` ${date.from.day}/${date.from.month}/${date.from.year}  - ${date.to.day}/${date.to.month}/${date.to.year}`
+                : "Select Move-in Date"}{" "}
             </p>
             <span>
               <svg
@@ -57,78 +97,96 @@ function Filter({ dataArr }) {
               </svg>
             </span>
           </span>
-          <div className="absolute mt-2">
+          <div
+            className="absolute mt-4"
+            style={dropdown === "WHEN" ? null : { display: "none" }}
+          >
             <Calendar
-              value={selectedDayRange}
-              onChange={setSelectedDayRange}
+              value={date}
+              onChange={setDate}
               shouldHighlightWeekends
+              colorPrimary="#6f63f0" // added this
+              colorPrimaryLight="#80a1ff" // and this
+              renderFooter={() => (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    padding: "10px  0",
+                    borderTop: "solid #6f63f0 1px",
+                  }}
+                >
+                  <button
+                    disabled={date.to == null}
+                    type="button"
+                    style={{
+                      background: "#6f63f0",
+                      height: "2rem",
+                      width: "5rem",
+                      fontSize: "16px",
+                      borderRadius: "1rem",
+                      color: "white",
+                    }}
+                    onClick={() => {
+                      setDropdown(null);
+                    }}
+                  >
+                    select
+                  </button>
+                  <button
+                    style={{
+                      background: "rgb(240, 99, 112)",
+                      height: "2rem",
+                      width: "5rem",
+                      fontSize: "16px",
+                      borderRadius: "1rem",
+                      color: "white",
+                    }}
+                    onClick={() => {
+                      setDropdown(null);
+                      setDate({ from: null, to: null });
+                    }}
+                    type="button"
+                    className="calender_cancle"
+                  >
+                    Cancle
+                  </button>
+                </div>
+              )}
             />
           </div>
         </div>
       </div>
-      {/* */}
+      {/* date end*/}
 
       {/* price */}
       <div>
         <p className="text-gray-500 font-semibold mb-2 text-sm">Price</p>
-
-        <div className="relative">
-          <p
-            className="   text-black text-base  font-bold cursor-pointer"
-            onClick={() => setDropdown(dropdown === "PRICE" ? null : "PRICE")}
-          >
-            {price.from} - {price.to}
-          </p>
-          {dropdown === "PRICE" ? (
-            <div
-              id="dropdown"
-              className="  absolute mt-2  left-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow "
-            >
-              <ul
-                className="py-1 text-sm text-gray-700 "
-                aria-labelledby="dropdownDefault"
-              >
-                <li className="px-1">
-                  <input
-                    type="number"
-                    name="from"
-                    id="from"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:border-blue-500 focus:outline-none focus:ring-0  peer"
-                    placeholder="from"
-                    required
-                  />
-                </li>
-                <li className="px-1">
-                  <input
-                    type="number"
-                    name="to"
-                    id="to"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:border-blue-500 focus:outline-none focus:ring-0  peer"
-                    placeholder="To"
-                    required
-                  />
-                </li>
-              </ul>
-            </div>
-          ) : null}
-        </div>
+        <Dropdown data={priceRange} value={price} setValue={setPrice} />
       </div>
       {/* price end */}
+      {/* property */}
       <div>
         <p className="text-gray-500 font-semibold mb-2  text-sm">
           PropertyType
         </p>
-        <Dropdown data={propertyTypes} />
+        <Dropdown
+          data={propertyTypes}
+          value={propertyType}
+          setValue={setPropertyType}
+        />
       </div>
+      {/* propert  end*/}
+
       <div>
         <button
-          type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5    focus:outline-none "
+          type="submit"
+          className="text-white bg-[#6f63f0] hover:bg-[#6b5ff4] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5    focus:outline-none "
         >
-          Default
+          Search
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

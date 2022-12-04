@@ -2,9 +2,8 @@ import React from "react";
 
 import { useState } from "react";
 
-function Dropdown({ data }) {
+function Dropdown({ data, setValue, value }) {
   const [show, setShow] = useState(false);
-  const [value, setValue] = useState("");
 
   return (
     <div className="relative">
@@ -40,9 +39,9 @@ function Dropdown({ data }) {
             className="py-1 text-sm text-gray-700 "
             aria-labelledby="dropdownDefault"
           >
-            {data.map((value) => {
+            {data.map((value, i) => {
               return (
-                <li>
+                <li key={i}>
                   <p
                     className="block py-2 px-4 hover:bg-gray-100  hover:text-gray-700 cursor-pointer"
                     onClick={() => {
