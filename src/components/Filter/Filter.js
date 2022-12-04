@@ -2,7 +2,6 @@ import Dropdown from "./Dropdown.js";
 import React, { useState } from "react";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar } from "react-modern-calendar-datepicker";
-import data from "../../Data/data.js";
 
 function Filter({ dataArr, setFilter }) {
   const [dropdown, setDropdown] = useState(null);
@@ -11,7 +10,6 @@ function Filter({ dataArr, setFilter }) {
   const [price, setPrice] = useState("price-Range");
   const [propertyType, setPropertyType] = useState("All");
   const [date, setDate] = useState({ from: null, to: null });
-
   const states = ["State", ...new Set(dataArr.map((data) => data.state))];
   const cities =
     state === "satae"

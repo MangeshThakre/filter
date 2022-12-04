@@ -15,13 +15,19 @@ function Card({ data }) {
       />
 
       <div className="p-5 gap-6 ">
-        <h5 className="mb-2 text-xl font-bold tracking-tight text-[#6f63f0] ">
-          &#x20B9; {data.price}
-          <span className=" text-sm text-gray-500 font-semibold">
-            {" "}
-            / month{" "}
-          </span>
-        </h5>
+        <div className="flex justify-between">
+          <h5 className="mb-2 text-xl font-bold tracking-tight text-[#6f63f0] ">
+            &#x20B9; {data.price}
+            <span className=" text-sm text-gray-500 font-semibold">
+              {" "}
+              / month{" "}
+            </span>
+          </h5>
+
+          <p className=" text-sm text-gray-500 font-semibold">
+            {data.propertyType}
+          </p>
+        </div>
 
         <p className="mb-1 font-semibold text-gray-700   text-sm  ">
           {data.state} , {data.city}
